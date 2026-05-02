@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAHID TAZUL - Chhatrabash (With Photos)</title>
+    <style>
+        /* বেসিক স্টাইল */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid #000;
+            padding: 30px;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        /* হেডার ও লোগো */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .title-area h1 { font-size: 2.2rem; margin: 0; }
+        .title-area p { font-size: 1.3rem; margin: 0; font-weight: normal; color: #555; }
+
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            border: 1.5px solid #000;
+            border-radius: 50%; /* বৃত্তাকার লোগো বক্স */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f9f9f9;
+        }
+
+        .logo-box img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+        }
+
+        /* মেম্বার সেকশন */
+        .members-label {
+            display: inline-block;
+            border: 2px solid #000;
+            border-radius: 20px;
+            padding: 5px 20px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .member-box {
+            border: 1.5px solid #000;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .member-box:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
+        }
+
+        .member-main-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* বৃত্তাকার ছবির বক্স */
+        .member-photo-circle {
+            width: 55px;
+            height: 55px;
+            border: 1.5px solid #ccc;
+            border-radius: 50%; /* বৃত্তাকার */
+            overflow: hidden;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .member-photo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* ছবি যেন কেটে না যায় */
+        }
+
+        .name-and-phone {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-text { font-size: 1.1rem; font-weight: bold; }
+        .phone-text { font-size: 0.85rem; color: #555; }
+
+        /* পপ-আপ (Modal) */
+        .modal-overlay {
+            visibility: hidden;
+            opacity: 0;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active { visibility: visible; opacity: 1; }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        /* পপ-আপে বড় ছবি */
+        .modal-photo-circle {
+            width: 90px;
+            height: 90px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px auto;
+            background: #eee;
+        }
+
+        .modal-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info-block { margin-bottom: 12px; text-align: left; }
+        .info-label { font-size: 0.8rem; color: #777; font-weight: bold; text-transform: uppercase; }
+        .info-value { font-size: 1rem; color: #000; display: block; margin-top: 2px;}
+
+        .btn-close {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card-container">
+    <header class="header">
+        <div class="title-area">
+            <h1>SHAHID TAZUL</h1>
+            <p>chhatrabash</p>
+        </div>
+        <div class="logo-box">
+            <img src="https://cdn-icons-png.flaticon.com/128/17433/17433850.png" alt="Logo">
+        </div>
+    </header>
+
+    <div class="members-label">Members</div>
+    <div class="member-list" id="memberList"></div>
+</div>
+
+<div class="modal-overlay" id="popupModal">
+    <div class="modal-content">
+        <div class="modal-photo-circle">
+            <img id="mPhoto" src="" alt="Member Photo">
+        </div>
+        <h3 id="mNameDisplay" style="margin-top: 0;"></h3>
+        
+        <div class="info-block"><span class="info-label">মোবাইল নম্বর</span> <span class="info-value" id="mPhone"></span></div>
+        <div class="info-block"><span class="info-label">WhatsApp</span> <span class="info-value" id="mWA"></span></div>
+        <div class="info-block"><span class="info-label">রুম নম্বর</span> <span class="info-value" id="mRoom">তথ্য নেই</span></div>
+
+        <button class="btn-close" onclick="closeModal()">বন্ধ করুন</button>
+    </div>
+</div>
+
+<script>
+    // আপনার মেম্বারদের লিস্ট (ডামি ছবির লিঙ্ক সহ)
+    // পরে নিজের ছবি বসাতে চাইলে photo এর ভেতর আসল লিঙ্ক দিয়ে দিন।
+    const members = [
+        { name: "কে এম ইমরান হুসাইন", phone: "+880 1743-248248", photo: "https://scontent.fdac148-1.fna.fbcdn.net/v/t39.30808-6/316524958_931162907868206_3048935649209369943_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=1d70fc&_nc_eui2=AeE6rpM4Kp8lsZfIjfXKAup5IoVtgFACSBcihW2AUAJIF_x9tDvv7woPNbFCQmpOsNgjcWGN0nRFGmOdFZHlaaEF&_nc_ohc=0VKZ9EalkxgQ7kNvwEdKbp3&_nc_oc=AdrpO0-c55I_kyPxzfjpUytBajqufF27WbbhMouwDRIJh5VjVYLqzYnjLQ0PGVymjT4&_nc_zt=23&_nc_ht=scontent.fdac148-1.fna&_nc_gid=tSXGEazuxzCTkXJsNXNDuw&_nc_ss=7b2a8&oh=00_Af60AdIO4HzCF6XwMq5pnPQLZFExq4vpyV5xeiQ29fSOIw&oe=69FBB38A", room: "১০১" },
+        { name: "আব্দুল গফুর", phone: "+880 1300-254672", photo: "https://i.pravatar.cc/150?u=gafur", room: "১০২" },
+        { name: "জহিরুল ইসলাম", phone: "+880 1778-975080", photo: "https://scontent.fdac148-1.fna.fbcdn.net/v/t39.30808-6/688899946_122157134102965697_937530771562397178_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeHxXm70GyFIfb1Qq5e6z61-mZLcw5j4PqmZktzDmPg-qcQU4xgIy9Qsr8e0F87yqKKkhHOseGqoTWEg9pd8PwQU&_nc_ohc=nojbMAvOBBIQ7kNvwEL-wHJ&_nc_oc=AdokN2eOh67ddD3NVKISTOvoETzoPyKJGBxdYapurFE_d2FxLdo_2vP_UUwctHxU1s4&_nc_zt=23&_nc_ht=scontent.fdac148-1.fna&_nc_gid=40Bfg573IK0WBAXIZc03fw&_nc_ss=7b2a8&oh=00_Af7yMhVaej8ocapILQw3bvVh4vIKeHia_2jii6w2HVmcqg&oe=69FBA7BE", room: "১০৩" },
+        { name: "মোঃ তারেক", phone: "+880 1327-750275", photo: "https://scontent.fdac148-1.fna.fbcdn.net/v/t39.30808-6/574907950_706443722486745_9090831034095882883_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGkVOs7fXNfbGjHKl3_4E3tNP3aL_D3KZQ0_dov8PcplIXkyy-CXpr0l5qikuQ5EkNKlWIXkV4r2FE6c8VjU0Em&_nc_ohc=L0I7jnKitzAQ7kNvwHVQ5Rh&_nc_oc=Adpnk9A0uDeHgkqbKTkWGc-QH9QkhvpHjejjXUYxDBRAfBDdCrF_So3MQuqqfx1hJI8&_nc_zt=23&_nc_ht=scontent.fdac148-1.fna&_nc_gid=2I-AqWSq5XjdNpF2Sqzwfg&_nc_ss=7b2a8&oh=00_Af4Uhw_SuePB3gs-b9SF9YwJhdNr3het5PRhID5AuQiopA&oe=69FBCCB6"
+        , room: "১০৪" },
+        { name: "সজিব সরকার", phone: "+880 1928-853822", photo: "https://i.pravatar.cc/150?u=sojib", room: "১০৫" },
+        { name: "কামাল হোসেন", phone: "+880 1703-172757", photo: "https://i.pravatar.cc/150?u=kamal", room: "১০৬" },
+        { name: "তাহের হোসেন", phone: "+880 1806-419657", photo: "https://scontent.fdac148-1.fna.fbcdn.net/v/t39.30808-6/672350162_924300463840414_2422969008085536060_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGO3ndHRFxJe0suB98K07L15k1lTZzETiPmTWVNnMROIx_WYJcydAxyHQqlwBnMr5dqwP3F5lnKd0xPAjHnMWsY&_nc_ohc=zUfy7Os5P24Q7kNvwGadaTG&_nc_oc=Adpq7o1d8U29jr66B0HXK0ZmIDmy_irdS4-tcL4BsFdiiD1ufPMBxpqcaXM6L0zy3Bw&_nc_zt=23&_nc_ht=scontent.fdac148-1.fna&_nc_gid=iFT4IFwPWlsZxaP0uI6c6A&_nc_ss=7b2a8&oh=00_Af6AKiYCixhGftn5ScoD6gUWYu5_qejvxqCXCRSCSG2l5w&oe=69FBBC3C", room: "১০৭" },
+        { name: "মোঃ ইব্রাহীম খলিলুল্লাহ", phone: "+8801734365986",photo: "https://scontent.fdac148-1.fna.fbcdn.net/v/t39.30808-6/603844900_122183853734487066_795924355581579671_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeExIIppEaYTDaXFa4FBV2_F-CyvMkjpfCX4LK8ySOl8JYMXJfKdQD0rADuEudiTi1fgnEHeTDEgrQSRNbKRMikt&_nc_ohc=AF97_VHHWpwQ7kNvwGm-Y1x&_nc_oc=AdoSnYn3XWd6TAqY1GwDNec45C_kxbae3yo87NonvS1E4obcZ4x73MnzlTPDyJ3LXc4&_nc_zt=23&_nc_ht=scontent.fdac148-1.fna&_nc_gid=4-k3HTipsxfS9kAtVLZnQg&_nc_ss=7b2a8&oh=00_Af7C65lgGc_38DVFMZAE0r0O9BqEt8d-AZUrZp7UfP79Ig&oe=69FBC19D", room: "১০৮" },
+        { name: "খালি", phone: "তথ্য নেই", photo: "https://cdn-icons-png.flaticon.com/128/847/847969.png", room: "" } // খালি বক্সের জন্য ইউজার আইকন
+    ];
+
+    const container = document.getElementById('memberList');
+
+    members.forEach(member => {
+        const box = document.createElement('div');
+        box.className = 'member-box';
+        box.onclick = () => openModal(member);
+        
+        box.innerHTML = `
+            <div class="member-main-info">
+                <div class="member-photo-circle">
+                    <img src="${member.photo}" alt="${member.name}">
+                </div>
+                <div class="name-and-phone">
+                    <span class="name-text">${member.name}</span>
+                    <span class="phone-text">${member.phone}</span>
+                </div>
+            </div>
+            <span style="font-size: 0.8rem; color: #888;">#${members.indexOf(member) + 1}</span>
+        `;
+        container.appendChild(box);
+    });
+
+    function openModal(member) {
+        if(member.name === "খালি") return;
+        
+        document.getElementById('mPhoto').src = member.photo;
+        document.getElementById('mNameDisplay').innerText = member.name;
+        document.getElementById('mPhone').innerText = member.phone;
+        document.getElementById('mWA').innerText = member.phone;
+        document.getElementById('mRoom').innerText = member.room || "তথ্য নেই";
+        document.getElementById('popupModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('popupModal').classList.remove('active');
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('popupModal')) closeModal();
+    }
+</script>
+
+</body>
+</html>
