@@ -96,6 +96,13 @@ class MessApp {
     const activeSection = document.getElementById(`tab-${tabId}`);
     if (activeSection) activeSection.classList.remove('hidden');
 
+    if (tabId === 'monthly') {
+      const [y, m] = this.selectedMonth.split('-').map(Number);
+      if (window.messStorage.state.dbMode === 'supabase') {
+        window.messStorage.syncMonthFromSupabase(y, m).then(() => this.renderMonthlySheetTab());
+      }
+    }
+
     this.render();
   }
 
@@ -171,9 +178,13 @@ class MessApp {
     container.innerHTML = html;
   }
 
-  onMonthPicked(monthStr) {
+  async onMonthPicked(monthStr) {
     if (!monthStr) return;
     this.selectedMonth = monthStr;
+    const [y, m] = monthStr.split('-').map(Number);
+    if (window.messStorage.state.dbMode === 'supabase') {
+      await window.messStorage.syncMonthFromSupabase(y, m);
+    }
     this.renderMonthlySheetTab();
   }
 
@@ -347,7 +358,11 @@ class MessApp {
                   <h3 class="font-bold text-base text-slate-900">${slot.name}</h3>
                   ${isLocked 
                     ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100/80 text-emerald-800 flex items-center gap-1">🔒 Cooked & Locked</span>' 
-                    : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50/80 text-blue-700">Open for orders</span>'}
+                    : (isChecked 
+                        ? (meal.isAutoContinuous 
+                            ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100/90 text-blue-800 flex items-center gap-1" title="Running continuously from previous day">🔄 Running Daily</span>' 
+                            : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100/80 text-emerald-800 flex items-center gap-1">✓ Eating Today</span>')
+                        : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">✕ Off</span>')}
                 </div>
                 <p class="text-xs text-slate-400 mt-0.5">${slot.timeLabel}</p>
                 ${cooking.menu_item ? `

@@ -206,13 +206,60 @@ class MessStorage {
         }
       }
 
-      // 2. Fetch meals for active date
-      await this.syncDateFromSupabase(this.state.currentDate);
+      // 2. Fetch meals for active month (and recent history for continuous tracking)
+      const [year, month] = this.state.currentDate.split('-').map(Number);
+      await this.syncMonthFromSupabase(year, month);
 
       this.state.lastSync = new Date();
       this.notify();
     } catch (e) {
       console.warn('Sync from Supabase failed, using local cache:', e);
+    }
+  }
+
+  async syncMonthFromSupabase(year, month) {
+    if (this.state.dbMode !== 'supabase') return;
+    try {
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
+      const endDate = `${year}-${String(month).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+
+      // Also fetch up to 7 days prior so continuous state from previous month boundary is known
+      const d = new Date(year, month - 1, 1);
+      d.setDate(d.getDate() - 7);
+      const priorStartDate = this.formatDate(d);
+
+      const [mealsData, cookingData] = await Promise.all([
+        window.supabaseApi.getMealsForMonth(priorStartDate, endDate),
+        window.supabaseApi.getCookingStatus(this.state.currentDate)
+      ]);
+
+      if (mealsData) {
+        mealsData.forEach(row => {
+          const key = `${row.member_id}_${row.date}_${row.meal_type}`;
+          this.state.meals[key] = {
+            count: row.count,
+            guest_count: row.guest_count || 0,
+            updated_at: row.updated_at
+          };
+        });
+        this.saveMealsToLocal();
+      }
+
+      if (cookingData) {
+        cookingData.forEach(row => {
+          const key = `${row.date}_${row.meal_type}`;
+          this.state.cookingStatus[key] = {
+            status: row.status,
+            cooked_meals_count: row.cooked_meals_count,
+            menu_item: row.menu_item || '',
+            completed_at: row.completed_at
+          };
+        });
+        this.saveCookingToLocal();
+      }
+    } catch (e) {
+      console.warn('Month sync error:', e);
     }
   }
 
@@ -252,10 +299,53 @@ class MessStorage {
     }
   }
 
-  /* ── Meal Actions ───────────────────────────────────────────── */
+  /* ── Meal Actions (Pencil Paper Continuous Protocol) ────────── */
   getMeal(memberId, date, mealType) {
-    const key = `${memberId}_${date}_${mealType}`;
-    return this.state.meals[key] || { count: 0, guest_count: 0 };
+    // 1. If an explicit record exists for this exact date:
+    const exactKey = `${memberId}_${date}_${mealType}`;
+    if (this.state.meals[exactKey] !== undefined) {
+      const rec = this.state.meals[exactKey];
+      return {
+        count: rec.count || 0,
+        guest_count: rec.guest_count || 0,
+        isAutoContinuous: false,
+        isExplicit: true
+      };
+    }
+
+    // 2. Paper Sheet Protocol:
+    // If a member gives their meal one day and doesn't erase it, it keeps running continuously.
+    // Look back to find the most recent previous date where this member set their meal preference.
+    const prefix = `${memberId}_`;
+    const suffix = `_${mealType}`;
+    let latestPrevDate = null;
+    let latestPrevRecord = null;
+
+    for (const key in this.state.meals) {
+      if (key.startsWith(prefix) && key.endsWith(suffix)) {
+        const recordDate = key.substring(prefix.length, key.length - suffix.length);
+        if (recordDate < date) {
+          if (!latestPrevDate || recordDate > latestPrevDate) {
+            latestPrevDate = recordDate;
+            latestPrevRecord = this.state.meals[key];
+          }
+        }
+      }
+    }
+
+    // 3. If a past preference exists, its personal meal status carries forward continuously
+    if (latestPrevRecord) {
+      const personalMealOn = (latestPrevRecord.count - (latestPrevRecord.guest_count || 0)) > 0;
+      return {
+        count: personalMealOn ? 1 : 0,
+        guest_count: 0, // Guest meals are one-off for the visit day only
+        isAutoContinuous: true,
+        continuousFrom: latestPrevDate
+      };
+    }
+
+    // 4. If no previous record exists at all before this date, defaults to 0 (Off)
+    return { count: 0, guest_count: 0, isAutoContinuous: false };
   }
 
   async clearAllMealData() {
