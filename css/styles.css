@@ -1,0 +1,330 @@
+/* css/styles.css - Modern Mobile-Optimized Mess Meal Hub Styling */
+
+:root {
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-light: #EFF6FF;
+  --success: #10B981;
+  --success-bg: #ECFDF5;
+  --danger: #EF4444;
+  --danger-bg: #FEF2F2;
+  --warning: #F59E0B;
+  --warning-bg: #FFFBEB;
+  --bg-main: #F8FAFC;
+  --card-bg: #FFFFFF;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+/* Global Typography: Exo 2 */
+html, body, button, input, select, textarea {
+  font-family: 'Exo 2', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Ambient Subtle Background for Minimal Glassmorphism */
+body {
+  background-color: #F8FAFC;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(219, 234, 254, 0.45) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(224, 231, 255, 0.4) 0px, transparent 45%),
+    radial-gradient(at 50% 100%, rgba(241, 245, 249, 0.7) 0px, transparent 50%);
+  background-attachment: fixed;
+  background-size: cover;
+  overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent accidental text highlight on rapid tapping */
+button, .no-select, .mobile-tab-btn, .date-pill, .meal-toggle-btn {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* Tactile touch feedback for mobile */
+button:active:not(:disabled), 
+.active-press:active {
+  transform: scale(0.96);
+  transition: transform 0.08s ease;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+/* Hide scrollbar for carousel but allow smooth touch scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Minimal Glassmorphism Surface Classes ─────────────────────── */
+.glass-surface,
+.glass-card {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
+.glass-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.glass-card-hover:hover {
+  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.07), 0 2px 6px rgba(15, 23, 42, 0.03);
+  border-color: rgba(191, 219, 254, 0.8);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+/* ── High-Visibility Text Boxes & Input Styling ───────────────── */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+select,
+textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1.5px solid #94A3B8 !important; /* Crisp Slate-400 border */
+  border-radius: 0.75rem !important;
+  box-shadow: inset 0 1.5px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+  font-weight: 500 !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="month"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  background-color: #FFFFFF !important;
+  border-color: #2563EB !important; /* Vibrant primary blue */
+  outline: none !important;
+  box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.22), inset 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #64748B !important; /* Visible Slate-500 placeholder */
+  opacity: 1 !important;
+}
+
+/* Extra prominent styling for Security PIN text boxes */
+#modal-pin-input,
+#chef-auth-pin,
+#edit-member-current-pin,
+#new-member-pin,
+#edit-member-new-pin {
+  background-color: #FFFFFF !important;
+  border: 2px solid #3B82F6 !important;
+  color: #1E3A8A !important;
+  letter-spacing: 0.28em !important;
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  box-shadow: inset 0 1px 3px rgba(37, 99, 235, 0.08), 0 2px 6px rgba(37, 99, 235, 0.08) !important;
+}
+
+#chef-auth-pin {
+  border-color: #F59E0B !important;
+  color: #78350F !important;
+  box-shadow: inset 0 1px 3px rgba(245, 158, 11, 0.08), 0 2px 6px rgba(245, 158, 11, 0.1) !important;
+}
+
+#modal-pin-input:focus,
+#edit-member-current-pin:focus,
+#new-member-pin:focus,
+#edit-member-new-pin:focus {
+  border-color: #1D4ED8 !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3) !important;
+}
+
+#chef-auth-pin:focus {
+  border-color: #D97706 !important;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Glassmorphism Navigation */
+.glass-header {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+.glass-date-bar {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+.glass-bottom-bar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  padding-bottom: max(0.5rem, var(--safe-bottom));
+  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* Bottom Nav Active Highlight */
+.mobile-tab-btn.active-nav {
+  color: #2563EB;
+}
+.mobile-tab-btn.active-nav .tab-icon-wrapper {
+  background: rgba(239, 246, 255, 0.9);
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+.tab-icon-wrapper {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Date Carousel Pill with Glass Touch */
+.date-pill {
+  transition: all 0.2s ease;
+  min-width: 58px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+}
+.date-pill.active {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  border-color: transparent;
+  transform: scale(1.04);
+}
+.date-pill.active .pill-day {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Meal Toggle Switch Button */
+.meal-toggle-btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 44px;
+}
+.meal-toggle-btn.active {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #FFFFFF;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+.meal-toggle-btn.inactive {
+  background: #F1F5F9;
+  color: #64748B;
+  border-color: #E2E8F0;
+}
+.meal-toggle-btn.locked {
+  background: #F1F5F9;
+  color: #94A3B8;
+  cursor: not-allowed;
+  border-color: #E2E8F0;
+  box-shadow: none;
+}
+
+/* Pulsing Badge for Live Updates */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+.pulse-badge {
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+/* Mobile Safe Bottom Spacing */
+.pb-safe-nav {
+  padding-bottom: calc(5.5rem + var(--safe-bottom));
+}
+
+/* Mobile Bottom Sheet Modal Styling */
+.modal-backdrop {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: opacity 0.25s ease;
+}
+
+@media (max-width: 639px) {
+  .modal-sheet-content {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 1.5rem !important;
+    border-top-right-radius: 1.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-bottom: max(1.5rem, calc(var(--safe-bottom) + 1rem)) !important;
+    animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+}
+
+/* Stepper (+ / -) button touch styling */
+.stepper-btn {
+  min-width: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  header, footer, nav, .no-print, .date-carousel-bar {
+    display: none !important;
+  }
+  #tab-monthly {
+    display: block !important;
+  }
+  #monthly-desktop-table-container {
+    display: block !important;
+  }
+  #monthly-mobile-cards-container {
+    display: none !important;
+  }
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+  th, td {
+    border: 1px solid #CBD5E1 !important;
+    padding: 6px 10px !important;
+  }
+}

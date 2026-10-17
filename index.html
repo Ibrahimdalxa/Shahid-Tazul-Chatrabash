@@ -1,420 +1,694 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHAHID TAZUL - Chhatrabash</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Global Reset */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Hind Siliguri', Tahoma, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #ffffff;
-            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #182848);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            overflow-x: hidden;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2563EB">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Meal Hub - Mess Meal-Counting System</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍲</text></svg>">
+  
+  <!-- Google Font: Exo 2 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Exo 2"', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+            }
+          }
         }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* ---------------- Welcome Screen Animation ---------------- */
-        #welcomeScreen {
-            position: fixed;
-            inset: 0;
-            background: #0f2027; /* Dark elegant background */
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            transition: opacity 0.8s ease-in-out, visibility 0.8s;
-        }
-
-        .welcome-text p.w-small {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.7);
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: textReveal 0.8s 0.2s forwards;
-        }
-
-        .welcome-text h1.w-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 10px 0;
-            background: linear-gradient(to right, #fff, #a0c4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: textReveal 0.8s 0.6s forwards;
-        }
-
-        .welcome-text p.w-sub {
-            font-size: 1.5rem;
-            color: rgba(255,255,255,0.8);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: textReveal 0.8s 1s forwards;
-        }
-
-        @keyframes textReveal {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ---------------- Glassmorphism Container ---------------- */
-        .card-container {
-            width: 100%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            opacity: 0;
-            animation: fadeInContainer 1s 3.5s forwards; /* Appears after welcome screen */
-        }
-
-        @keyframes fadeInContainer {
-            to { opacity: 1; }
-        }
-
-        /* Header section */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .title-area h1 { 
-            font-size: 2.2rem; font-weight: 700; letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .title-area p { 
-            font-size: 1.2rem; font-weight: 300; color: rgba(255, 255, 255, 0.8);
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-
-        .logo-box {
-            width: 75px; height: 75px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .logo-box img { width: 65%; height: 65%; object-fit: contain; }
-
-        /* Member Label */
-        .members-label {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px; padding: 6px 24px; font-size: 1.1rem;
-            margin-bottom: 20px; font-weight: 600;
-        }
-
-        /* Member List */
-        .member-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .member-box {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px; padding: 12px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .member-box:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-3px);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .member-main-info {
-            display: flex; align-items: center; gap: 15px; flex: 1;
-        }
-
-        .member-photo-circle {
-            width: 55px; height: 55px; border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.1);
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .member-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
-
-        .name-and-phone { display: flex; flex-direction: column; }
-        .name-text { font-size: 1.15rem; font-weight: 600; color: #ffffff; }
-        .phone-text { font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
-
-        /* Direct Call Button in List */
-        .call-action-btn {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.5);
-            color: #4CAF50;
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-        
-        .call-action-btn:hover {
-            background: rgba(76, 175, 80, 0.8);
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        .call-action-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
-        /* ---------------- Modal Slide Animation ---------------- */
-        .modal-overlay {
-            visibility: hidden; opacity: 0;
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px);
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.4s ease, visibility 0.4s;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active { visibility: visible; opacity: 1; }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px; border-radius: 24px;
-            width: 90%; max-width: 360px; text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            
-            /* Initial state: Slide from Left */
-            transform: translateX(-100vw);
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .modal-overlay.active .modal-content {
-            /* Active state: Center */
-            transform: translateX(0);
-        }
-
-        .modal-overlay.closing .modal-content {
-            /* Closing state: Slide to Right */
-            transform: translateX(100vw);
-        }
-
-        /* Modal Elements */
-        .modal-photo-circle {
-            width: 100px; height: 100px; border: 3px solid rgba(255, 255, 255, 0.4);
-            border-radius: 50%; overflow: hidden; margin: 0 auto 20px auto;
-            background: rgba(255, 255, 255, 0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .modal-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
-        .modal-content h3 { margin-bottom: 20px; font-size: 1.5rem; color: #ffffff; }
-
-        .info-block { 
-            margin-bottom: 12px; text-align: left; background: rgba(255, 255, 255, 0.05);
-            padding: 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        
-        .info-text-area { display: flex; flex-direction: column; }
-        .info-label { font-size: 0.8rem; color: rgba(255, 255, 255, 0.5); font-weight: 600; text-transform: uppercase; }
-        .info-value { font-size: 1.1rem; color: #ffffff; margin-top: 4px; font-weight: 400; }
-
-        /* Modal Call Button */
-        .btn-call-large {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 12px; margin-top: 10px;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: #fff; border: none; border-radius: 12px; font-size: 1.1rem;
-            font-weight: 600; cursor: pointer; text-decoration: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .btn-call-large:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(56, 239, 125, 0.4); }
-        .btn-call-large svg { width: 22px; height: 22px; fill: #fff; }
-
-        .btn-close {
-            width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; font-size: 1rem;
-            font-weight: 600; cursor: pointer; margin-top: 12px; transition: all 0.3s ease;
-        }
-        .btn-close:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); }
-
-    </style>
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-100 selection:text-blue-900 pb-safe-nav md:pb-12">
 
-<!-- 1. Welcome Screen -->
-<div id="welcomeScreen">
-    <div class="welcome-text">
-        <p class="w-small">Welcome to</p>
-        <h1 class="w-title">SHAHID TAZUL</h1>
-        <p class="w-sub">chhatrabash</p>
+  <!-- ======================================================== -->
+  <!-- 1. TOP HEADER & APP BAR                                  -->
+  <!-- ======================================================== -->
+  <header class="glass-header sticky top-0 z-40 px-4 py-3 shadow-sm">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
+      <!-- Mess Logo & Name -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 text-xl font-bold">
+          🍲
+        </div>
+        <div>
+          <h1 class="text-base font-bold tracking-tight text-slate-900 leading-tight flex items-center gap-1.5">
+            Meal Hub
+            <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">Mess</span>
+          </h1>
+          <p class="text-xs text-slate-500">Daily Counting & Cook Sync</p>
+        </div>
+      </div>
+
+      <!-- Right Action Bar: Supabase Status & Active User Profile Pill -->
+      <div class="flex items-center gap-2">
+        <!-- Supabase Cloud Indicator Pill -->
+        <button id="btn-db-status" onclick="app.openSupabaseModal()" class="glass-pill flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer hover:border-blue-400">
+          <span id="db-status-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="db-status-text" class="hidden sm:inline text-slate-600">Connecting...</span>
+        </button>
+
+        <!-- Active User Switcher Pill -->
+        <button id="btn-user-profile" onclick="app.openUserSwitcherModal()" class="glass-pill flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full hover:border-blue-400 transition-all">
+          <div id="user-avatar" class="w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center uppercase">
+            U
+          </div>
+          <div class="text-left">
+            <span id="user-display-name" class="block text-xs font-semibold text-slate-800 leading-tight max-w-[85px] sm:max-w-[120px] truncate">Select User</span>
+            <span id="user-display-role" class="block text-[10px] text-slate-400 leading-none">Member</span>
+          </div>
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
     </div>
-</div>
+  </header>
 
-<!-- Main App Container -->
-<div class="card-container">
-    <header class="header">
-        <div class="title-area">
-            <h1>SHAHID TAZUL</h1>
-            <p>chhatrabash</p>
-        </div>
-        <div class="logo-box">
-            <img src="https://cdn-icons-png.flaticon.com/128/17433/17433850.png" alt="Logo">
-        </div>
-    </header>
-
-    <div class="members-label">Members</div>
-    <div class="member-list" id="memberList"></div>
-</div>
-
-<!-- 3. Slide Left/Right Modal -->
-<div class="modal-overlay" id="popupModal">
-    <div class="modal-content">
-        <div class="modal-photo-circle">
-            <img id="mPhoto" src="" alt="Member Photo">
-        </div>
-        <h3 id="mNameDisplay"></h3>
-        
-        <div class="info-block">
-            <div class="info-text-area">
-                <span class="info-label">মোবাইল নম্বর</span> 
-                <span class="info-value" id="mPhone"></span>
-            </div>
-        </div>
-        
-        <div class="info-block">
-            <div class="info-text-area">
-                <span class="info-label">রুম নম্বর</span> 
-                <span class="info-value" id="mRoom">তথ্য নেই</span>
-            </div>
+  <!-- ======================================================== -->
+  <!-- 2. MOBILE-FIRST DATE BAR & DAY CAROUSEL                  -->
+  <!-- ======================================================== -->
+  <section class="glass-date-bar sticky top-[57px] sm:top-[61px] z-30 date-carousel-bar">
+    <div class="max-w-4xl mx-auto px-3 sm:px-4 pt-2 pb-2">
+      <!-- Top Sub-bar: Active Date Header, Navigation Arrows & Calendar Picker -->
+      <div class="flex items-center justify-between gap-2 mb-1.5">
+        <div class="flex items-center gap-1.5">
+          <button onclick="app.navigateDay(-1)" class="w-8 h-8 rounded-lg bg-slate-100/80 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm font-bold active-press transition-all" title="Previous Day">
+            ‹
+          </button>
+          <span id="carousel-month-label" class="text-xs sm:text-sm font-bold text-slate-800 tracking-tight">October 2026</span>
+          <button onclick="app.navigateDay(1)" class="w-8 h-8 rounded-lg bg-slate-100/80 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm font-bold active-press transition-all" title="Next Day">
+            ›
+          </button>
         </div>
 
-        <!-- 2. Direct Call Button inside Modal -->
-        <a href="#" id="modalCallBtn" class="btn-call-large">
-            <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
-            কল করুন
-        </a>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-today-badge" onclick="app.goToToday()" class="hidden text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 active-press transition-colors">
+            Today
+          </button>
 
-        <button class="btn-close" onclick="closeModal()">বন্ধ করুন</button>
+          <!-- Native date picker trigger -->
+          <label class="cursor-pointer flex items-center gap-1 text-[11px] font-semibold text-slate-600 bg-white/70 hover:bg-white/90 px-2.5 py-1 rounded-lg border border-slate-200/80 active-press backdrop-blur-xs">
+            <span>📅</span>
+            <span class="hidden sm:inline">Pick Date</span>
+            <input type="date" id="date-picker-input" onchange="app.onDatePicked(this.value)" class="sr-only">
+          </label>
+        </div>
+      </div>
+
+      <!-- Horizontal Day Pill Carousel (Touch Friendly & Thumb-Tappable) -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="date-carousel-strip">
+        <!-- Rendered dynamically by app.renderDateCarousel() -->
+      </div>
     </div>
-</div>
+  </section>
 
-<script>
-    // Handle Welcome Screen Animation
-    window.addEventListener('load', () => {
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        // Wait 3 seconds, then start fading out
-        setTimeout(() => {
-            welcomeScreen.style.opacity = '0';
-            welcomeScreen.style.visibility = 'hidden';
-            // Completely remove from DOM after transition
-            setTimeout(() => {
-                welcomeScreen.remove();
-            }, 800);
-        }, 3000);
-    });
+  <!-- ======================================================== -->
+  <!-- 3. DESKTOP SUB-NAV TABS                                  -->
+  <!-- ======================================================== -->
+  <nav class="hidden md:block glass-header border-b border-slate-200/60">
+    <div class="max-w-4xl mx-auto px-4 flex gap-6">
+      <button onclick="app.switchTab('my-meals')" id="desktop-tab-my-meals" class="desktop-tab-link py-3 font-medium text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
+        <span>🍽️</span> My Daily Meals
+      </button>
+      <button onclick="app.switchTab('chef-corner')" id="desktop-tab-chef-corner" class="desktop-tab-link py-3 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <span>👨‍🍳</span> Chef's Corner
+      </button>
+      <button onclick="app.switchTab('monthly')" id="desktop-tab-monthly" class="desktop-tab-link py-3 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <span>📊</span> Monthly Sheet
+      </button>
+      <button onclick="app.switchTab('members')" id="desktop-tab-members" class="desktop-tab-link py-3 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <span>👥</span> Mess Members
+      </button>
+    </div>
+  </nav>
 
-    const members = [
-        { name: "কে এম ইমরান হুসাইন", phone: "+880 1743-248248", photo: "https://i.ibb.co.com/671ksQS3/525335176-1544032479914576-8298810793362339152-n.jpg", room: "উত্তর" },
-        { name: "আব্দুল গফুর", phone: "+880 1300-254672", photo: "https://i.ibb.co.com/5xBr1yTt/Remove-background-replace-white-202605092338.jpg", room: "দক্ষিণ" },
-        { name: "জহিরুল ইসলাম", phone: "+880 1778-975080", photo: "https://i.ibb.co.com/yFq5s4QR/688899946-122157134102965697-937530771562397178-n.jpg", room: "দক্ষিণ" },
-        { name: "মোঃ তারেক", phone: "+880 1327-750275", photo: "https://i.ibb.co.com/gLXWJ4yC/tarek-web.webp", room: "পশ্চিম" },
-        { name: "সজিব সরকার", phone: "+880 1928-853822", photo: "https://i.ibb.co.com/PGxvMNsh/mohamed-hassan-silk-8976449-1920.png", room: "পশ্চিম" },
-        { name: "কামাল হোসেন", phone: "+880 1703-172757", photo: "https://i.ibb.co.com/PGxvMNsh/mohamed-hassan-silk-8976449-1920.png", room: "পশ্চিম" },
-        { name: "তাহের হোসেন", phone: "+880 1806-419657", photo: "https://i.ibb.co.com/zHNN0Hg5/659207479-909852241951903-3531338251726889684-n.jpg", room: "দক্ষিণ" },
-        { name: "মোঃ ইব্রাহীম খলিলুল্লাহ", phone: "+8801734365986", photo: "https://i.ibb.co.com/jPVp0RkV/untitled-Flux-Kontext-2026-04-29-18-47-40.png", room: "উত্তর" },
-        { name: "আক্তার হুসাইন", phone: "+8801314196435", photo: "https://i.ibb.co.com/chpKGVK3/images.jpg", room: "" }
-    ];
+  <!-- ======================================================== -->
+  <!-- 4. MAIN APP CONTENT CONTAINER                            -->
+  <!-- ======================================================== -->
+  <main class="max-w-4xl mx-auto w-full px-4 py-4 flex-1">
 
-    const container = document.getElementById('memberList');
+    <!-- ──────────────────────────────────────────────────────── -->
+    <!-- TAB 1: MY MEALS (MEMBER DASHBOARD)                       -->
+    <!-- ──────────────────────────────────────────────────────── -->
+    <section id="tab-my-meals" class="tab-content space-y-4">
+      
+      <!-- Member Overview Header Banner -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 text-white shadow-md flex items-center justify-between">
+        <div>
+          <span class="text-xs uppercase font-semibold tracking-wider text-blue-200">Personal Dashboard</span>
+          <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+            <h2 class="text-xl font-bold" id="member-welcome-name">Hello, Member!</h2>
+            <button onclick="app.openEditCurrentMemberModal()" class="text-[11px] font-semibold bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded-lg backdrop-blur flex items-center gap-1 active-press transition-all cursor-pointer" title="Customize your Name and Password">
+              ✏️ Edit Profile
+            </button>
+          </div>
+          <p class="text-xs text-blue-100 mt-1" id="member-date-display">Today's Meal Order Status</p>
+        </div>
+        <div class="text-right bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20">
+          <span class="text-[11px] block text-blue-200 uppercase font-medium">This Month</span>
+          <span class="text-2xl font-black text-white" id="member-month-total-badge">0</span>
+          <span class="text-[10px] block text-blue-200">Meals Counted</span>
+        </div>
+      </div>
 
-    members.forEach((member, index) => {
-        const cleanPhone = member.phone.replace(/[^0-9+]/g, ''); // Clean space/dash for dialer
-        const box = document.createElement('div');
-        box.className = 'member-box';
-        
-        box.innerHTML = `
-            <div class="member-main-info" onclick='openModal(${JSON.stringify(member)})'>
-                <div class="member-photo-circle">
-                    <img src="${member.photo}" alt="${member.name}" loading="lazy">
-                </div>
-                <div class="name-and-phone">
-                    <span class="name-text">${member.name}</span>
-                    <span class="phone-text">${member.phone}</span>
-                </div>
-            </div>
-            <!-- Direct Call Link Button (stopPropagation prevents modal from opening) -->
-            <a href="tel:${cleanPhone}" class="call-action-btn" onclick="event.stopPropagation();" title="কল করুন">
-                <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
-            </a>
-        `;
-        container.appendChild(box);
-    });
+      <!-- Quick Explanation Callout -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2.5 text-xs text-amber-900">
+        <span class="text-base">💡</span>
+        <p>
+          <strong>Lock Rule:</strong> Meals are editable until the cook finishes cooking and presses <em>"Cooking Done"</em>. Once cooked, the meal locks automatically and the prepared count is displayed below.
+        </p>
+      </div>
 
-    const modal = document.getElementById('popupModal');
+      <!-- 3 MEAL SLOTS CONTAINER -->
+      <div class="space-y-3" id="member-meals-container">
+        <!-- Rendered dynamically by app.js: Breakfast, Lunch, Dinner cards -->
+      </div>
+    </section>
 
-    function openModal(member) {
-        if(member.name === "খালি") return;
-        
-        document.getElementById('mPhoto').src = member.photo;
-        document.getElementById('mNameDisplay').innerText = member.name;
-        document.getElementById('mPhone').innerText = member.phone;
-        document.getElementById('mRoom').innerText = member.room || "তথ্য নেই";
-        
-        // Update Call button link dynamically
-        const cleanPhone = member.phone.replace(/[^0-9+]/g, '');
-        document.getElementById('modalCallBtn').href = `tel:${cleanPhone}`;
-        
-        // Reset and show modal (Slide from left)
-        modal.classList.remove('closing');
-        modal.classList.add('active');
+    <!-- ──────────────────────────────────────────────────────── -->
+    <!-- TAB 2: CHEF CORNER (COOK'S SUMMARY & CONTROLS)           -->
+    <!-- ──────────────────────────────────────────────────────── -->
+    <section id="tab-chef-corner" class="tab-content hidden space-y-4">
+      
+      <!-- Chef Header Card -->
+      <div class="bg-gradient-to-r from-rose-600 to-amber-600 rounded-2xl p-4 text-white shadow-md flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-lg">👨‍🍳</span>
+            <span class="text-xs uppercase font-bold tracking-wider text-rose-200">Kitchen Command Center</span>
+          </div>
+          <h2 class="text-xl font-bold mt-0.5">Chef's Meal Count</h2>
+          <p class="text-xs text-rose-100 mt-1">Live order count calculated automatically</p>
+        </div>
+        <div class="bg-white/15 backdrop-blur-md rounded-xl px-3 py-2 text-center border border-white/20">
+          <span class="text-[11px] block text-rose-200 font-semibold">Total Meals Today</span>
+          <span class="text-2xl font-black text-white" id="chef-total-meals-today">0</span>
+        </div>
+      </div>
+
+      <!-- Chef Meal Slots Summary (Morning, Lunch, Dinner) -->
+      <div class="space-y-4" id="chef-slots-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────── -->
+    <!-- TAB 3: MONTHLY SHEET (CALCULATION & BILLING)             -->
+    <!-- ──────────────────────────────────────────────────────── -->
+    <section id="tab-monthly" class="tab-content hidden space-y-4">
+      
+      <!-- Monthly Filters & Actions -->
+      <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Monthly Meal Sheet</h2>
+          <p class="text-xs text-slate-500">Full meal summary for mess billing settlement</p>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+          <input type="month" id="monthly-picker" onchange="app.onMonthPicked(this.value)" class="text-sm font-bold bg-white border-2 border-slate-300 rounded-xl px-3 py-1.5 text-slate-900 shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          
+          <button onclick="app.openResetMonthModal()" class="px-3 py-1.5 bg-rose-50/80 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-lg border border-rose-200/80 flex items-center gap-1.5 transition-colors" title="Clear all meal records for a fresh month (Password Protected)">
+            <span>🔒</span> Reset Month
+          </button>
+          <button onclick="app.exportMonthlyCSV()" class="px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-200/80 flex items-center gap-1.5 transition-colors" title="Export CSV">
+            <span>📥</span> CSV
+          </button>
+          <button onclick="window.print()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-colors" title="Print Sheet">
+            <span>🖨️</span> Print
+          </button>
+        </div>
+      </div>
+
+      <!-- Monthly KPI Highlights -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="glass-card p-3.5 rounded-2xl">
+          <span class="text-xs text-slate-500 font-medium block">Total Mess Meals</span>
+          <span class="text-2xl font-black text-blue-600 mt-1 block" id="kpi-month-total">0</span>
+        </div>
+        <div class="glass-card p-3.5 rounded-2xl">
+          <span class="text-xs text-slate-500 font-medium block">Daily Average</span>
+          <span class="text-2xl font-black text-emerald-600 mt-1 block" id="kpi-month-daily-avg">0</span>
+        </div>
+        <div class="glass-card p-3.5 rounded-2xl">
+          <span class="text-xs text-slate-500 font-medium block">Active Members</span>
+          <span class="text-2xl font-black text-purple-600 mt-1 block" id="kpi-month-members">0</span>
+        </div>
+        <div class="glass-card p-3.5 rounded-2xl">
+          <span class="text-xs text-slate-500 font-medium block">Guest Meals</span>
+          <span class="text-2xl font-black text-amber-600 mt-1 block" id="kpi-month-guests">0</span>
+        </div>
+      </div>
+
+      <!-- Mobile View Switcher (Cards vs Table) -->
+      <div class="flex items-center justify-between sm:hidden pt-1">
+        <span class="text-xs font-bold text-slate-700">Member Breakdown</span>
+        <div class="flex bg-slate-200/80 p-0.5 rounded-lg text-[11px] font-semibold">
+          <button onclick="app.setMonthlyView('cards')" id="btn-view-cards" class="px-2.5 py-1 rounded-md bg-white text-blue-600 shadow-xs transition-all">
+            📇 Cards
+          </button>
+          <button onclick="app.setMonthlyView('table')" id="btn-view-table" class="px-2.5 py-1 rounded-md text-slate-600 transition-all">
+            📊 Table
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Cards Container (Default on mobile) -->
+      <div id="monthly-mobile-cards-container" class="space-y-2.5 sm:hidden">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+      <!-- Member Table (Desktop & Print) -->
+      <div id="monthly-desktop-table-container" class="hidden sm:block glass-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-50/70 border-b border-slate-200/80 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th class="py-3 px-4">Member</th>
+                <th class="py-3 px-3 text-center">Room</th>
+                <th class="py-3 px-3 text-center">Morning</th>
+                <th class="py-3 px-3 text-center">Lunch</th>
+                <th class="py-3 px-3 text-center">Dinner</th>
+                <th class="py-3 px-3 text-center">Guest</th>
+                <th class="py-3 px-4 text-right font-bold text-slate-900">Total Meals</th>
+                <th class="py-3 px-3 text-center no-print">Action</th>
+              </tr>
+            </thead>
+            <tbody id="monthly-table-body" class="divide-y divide-slate-100">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────── -->
+    <!-- TAB 4: MESS MEMBERS & MANAGEMENT                        -->
+    <!-- ──────────────────────────────────────────────────────── -->
+    <section id="tab-members" class="tab-content hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Mess Members</h2>
+          <p class="text-xs text-slate-500">Manage roommates, cook profile & quick PINs</p>
+        </div>
+        <button onclick="app.openAddMemberModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all active:scale-95">
+          <span>➕</span> Add Member
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="members-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- 5. MOBILE BOTTOM NAVIGATION BAR                          -->
+  <!-- ======================================================== -->
+  <nav class="md:hidden glass-bottom-bar fixed bottom-0 left-0 right-0 z-40 px-3 py-1">
+    <div class="grid grid-cols-4 gap-1 max-w-md mx-auto">
+      <button onclick="app.switchTab('my-meals')" id="mobile-tab-my-meals" class="mobile-tab-btn active-nav flex flex-col items-center justify-center py-1 rounded-xl text-blue-600 font-bold active-press transition-all">
+        <div class="tab-icon-wrapper w-10 h-7 rounded-full flex items-center justify-center text-lg">🍽️</div>
+        <span class="text-[10px] mt-0.5 tracking-tight">My Meals</span>
+      </button>
+      <button onclick="app.switchTab('chef-corner')" id="mobile-tab-chef-corner" class="mobile-tab-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium active-press transition-all">
+        <div class="tab-icon-wrapper w-10 h-7 rounded-full flex items-center justify-center text-lg">👨‍🍳</div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Chef</span>
+      </button>
+      <button onclick="app.switchTab('monthly')" id="mobile-tab-monthly" class="mobile-tab-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium active-press transition-all">
+        <div class="tab-icon-wrapper w-10 h-7 rounded-full flex items-center justify-center text-lg">📊</div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Monthly</span>
+      </button>
+      <button onclick="app.switchTab('members')" id="mobile-tab-members" class="mobile-tab-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 font-medium active-press transition-all">
+        <div class="tab-icon-wrapper w-10 h-7 rounded-full flex items-center justify-center text-lg">👥</div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Members</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ======================================================== -->
+  <!-- 6. MODALS & POPUPS (MOBILE BOTTOM SHEETS)                -->
+  <!-- ======================================================== -->
+
+  <!-- A. User Switcher & PIN Modal -->
+  <div id="modal-user-switcher" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-sm w-full p-5 shadow-2xl modal-sheet-content space-y-4">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">Select Your Profile</h3>
+          <p class="text-xs text-slate-500">Pick your name to access your dashboard</p>
+        </div>
+        <button onclick="app.closeUserSwitcherModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <div class="space-y-2 max-h-64 overflow-y-auto" id="modal-member-pick-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div id="pin-prompt-box" class="hidden space-y-3 pt-2 border-t border-slate-100">
+        <label class="block text-xs font-bold text-slate-800">Enter 4-Digit PIN for <span id="pin-target-name" class="text-blue-600 font-bold">User</span>:</label>
+        <div class="flex gap-2">
+          <input type="password" id="modal-pin-input" maxlength="4" inputmode="numeric" placeholder="••••" onkeyup="if(event.key==='Enter') app.confirmPinLogin()" class="w-full tracking-widest text-center text-xl font-black border-2 border-blue-400 bg-white rounded-xl py-2.5 text-blue-950 focus:ring-4 focus:ring-blue-500/20 focus:outline-none shadow-sm">
+          <button onclick="app.confirmPinLogin()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-xs hover:bg-blue-700 active:scale-95 transition-all shadow-sm">Verify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B. Add Member Modal -->
+  <div id="modal-add-member" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-sm w-full p-5 shadow-2xl modal-sheet-content space-y-4">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <h3 class="font-bold text-slate-900 text-base">Add New Mess Member</h3>
+        <button onclick="app.closeAddMemberModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <form onsubmit="app.handleAddMember(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">Full Name *</label>
+          <input type="text" id="new-member-name" required placeholder="e.g. Mahfuz" class="w-full text-sm font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Room No</label>
+            <input type="text" id="new-member-room" placeholder="e.g. 103" class="w-full text-sm font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">PIN (4-digits)</label>
+            <input type="text" id="new-member-pin" maxlength="4" placeholder="0000" value="0000" class="w-full text-sm font-bold tracking-widest text-center border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">Role</label>
+          <select id="new-member-role" class="w-full text-sm font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+            <option value="member">Mess Member</option>
+            <option value="chef">Chef / Cook</option>
+          </select>
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="app.closeAddMemberModal()" class="w-1/2 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors">Cancel</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all active:scale-95">Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- B2. Edit Member Modal -->
+  <div id="modal-edit-member" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-sm w-full p-5 shadow-2xl modal-sheet-content space-y-4">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base" id="edit-modal-title">Edit Member Profile</h3>
+          <p class="text-xs text-slate-500">Update details or change password</p>
+        </div>
+        <button onclick="app.closeEditMemberModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <form onsubmit="app.handleSaveEditMember(event)" class="space-y-3">
+        <input type="hidden" id="edit-member-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">Full Name *</label>
+          <input type="text" id="edit-member-name" required placeholder="Member name" class="w-full text-sm font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Room No</label>
+            <input type="text" id="edit-member-room" placeholder="e.g. 101" class="w-full text-sm font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Role</label>
+            <select id="edit-member-role" class="w-full text-sm font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-xs">
+              <option value="member">Mess Member</option>
+              <option value="chef">Chef / Cook</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">New PIN / Password (Optional)</label>
+          <input type="password" id="edit-member-new-pin" maxlength="4" inputmode="numeric" placeholder="Leave blank to keep same" class="w-full text-sm font-bold border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:outline-none tracking-widest text-center shadow-xs">
+          <p class="text-[11px] text-slate-500 mt-1">Enter 4 digits only if you wish to change your PIN</p>
+        </div>
+
+        <!-- PIN Verification Required -->
+        <div class="p-3 bg-blue-50/90 border-2 border-blue-200 rounded-xl space-y-1.5 shadow-xs">
+          <label class="block text-xs font-bold text-blue-950 flex items-center gap-1.5">
+            <span>🔒</span> Enter Current PIN to Apply Changes *
+          </label>
+          <input type="password" id="edit-member-current-pin" required maxlength="4" inputmode="numeric" placeholder="••••" class="w-full text-center text-xl font-black tracking-widest border-2 border-blue-400 bg-white text-blue-950 rounded-xl py-2.5 focus:ring-4 focus:ring-blue-500/20 focus:outline-none shadow-sm">
+          <p class="text-[11px] text-blue-800 font-medium">You must enter <span id="edit-pin-target-name" class="font-bold">this member</span>'s current PIN to save any edits.</p>
+        </div>
+
+        <div class="pt-1 flex gap-2">
+          <button type="button" onclick="app.closeEditMemberModal()" class="w-1/2 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors">Cancel</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all active:scale-95">Verify & Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- B3. Chef Authentication PIN Modal -->
+  <div id="modal-chef-auth" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-sm w-full p-5 shadow-2xl modal-sheet-content space-y-4">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-lg">
+            👨‍🍳
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">Chef Corner Access</h3>
+            <p class="text-xs text-slate-500">Cook verification required</p>
+          </div>
+        </div>
+        <button onclick="app.closeChefAuthModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <div class="bg-amber-50/90 border-2 border-amber-200 rounded-xl p-3 text-xs text-amber-900 space-y-1 shadow-xs">
+        <p class="font-bold flex items-center gap-1 text-amber-950">
+          <span>🔒</span> Kitchen Command Center
+        </p>
+        <p class="text-[11px] leading-relaxed text-amber-800 font-medium">
+          Enter the Chef's 4-digit PIN to access the kitchen controls and manage meal orders.
+        </p>
+      </div>
+
+      <form onsubmit="app.handleChefAuthSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">Enter Chef PIN</label>
+          <input type="password" id="chef-auth-pin" required maxlength="4" inputmode="numeric" placeholder="••••" class="w-full text-center text-2xl font-black tracking-widest border-2 border-amber-400 bg-white text-amber-950 rounded-xl py-3 focus:ring-4 focus:ring-amber-500/25 focus:outline-none shadow-sm">
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="app.closeChefAuthModal()" class="w-1/2 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="w-1/2 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1.5">
+            <span>👨‍🍳</span> Enter Chef Corner
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- C. Supabase Setup Modal -->
+  <div id="modal-supabase-setup" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 shadow-2xl modal-sheet-content space-y-4 max-h-[90vh] flex flex-col">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">⚡</span>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">Supabase Cloud Connection</h3>
+            <p class="text-xs text-slate-500" id="modal-supabase-status-label">Setup database tables</p>
+          </div>
+        </div>
+        <button onclick="app.closeSupabaseModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <div class="text-xs text-slate-600 space-y-2 overflow-y-auto pr-1">
+        <p>
+          Your project connects to Supabase URL: <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-700 font-mono">https://ujkrxcqvnxkxfnpwaydy.supabase.co</code>
+        </p>
+        <p>
+          To enable live cloud sync for all members and the cook across multiple phones, run this SQL script once in your Supabase SQL Editor:
+        </p>
+
+        <div class="relative">
+          <pre class="bg-slate-900 text-emerald-400 p-3 rounded-xl text-[11px] font-mono overflow-x-auto max-h-48" id="sql-preview-text">
+-- Creates mess_members, meal_entries & cooking_status
+CREATE TABLE IF NOT EXISTS public.mess_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'member',
+    pin TEXT NOT NULL DEFAULT '0000',
+    room_no TEXT DEFAULT '',
+    avatar_color TEXT DEFAULT '#3B82F6',
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS public.meal_entries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    member_id UUID NOT NULL REFERENCES public.mess_members(id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    meal_type TEXT NOT NULL,
+    count INTEGER NOT NULL DEFAULT 1,
+    guest_count INTEGER NOT NULL DEFAULT 0,
+    CONSTRAINT unique_member_date_meal UNIQUE (member_id, date, meal_type)
+);
+CREATE TABLE IF NOT EXISTS public.cooking_status (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    date DATE NOT NULL,
+    meal_type TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    cooked_meals_count INTEGER NOT NULL DEFAULT 0,
+    menu_item TEXT DEFAULT '',
+    completed_at TIMESTAMPTZ,
+    CONSTRAINT unique_date_meal_status UNIQUE (date, meal_type)
+);
+ALTER TABLE public.mess_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.meal_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.cooking_status ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow anon all on mess_members" ON public.mess_members FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Allow anon all on meal_entries" ON public.meal_entries FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Allow anon all on cooking_status" ON public.cooking_status FOR ALL TO anon USING (true) WITH CHECK (true);</pre>
+          <button onclick="app.copySqlToClipboard()" class="absolute top-2 right-2 px-2.5 py-1 bg-white/20 hover:bg-white/30 text-white rounded-md text-[11px] backdrop-blur font-semibold transition-all">
+            📋 Copy SQL
+          </button>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-blue-900 text-xs">
+          <strong>Step 1:</strong> Click <strong>Copy SQL</strong> above.<br>
+          <strong>Step 2:</strong> Open your <a href="https://supabase.com/dashboard/project/ujkrxcqvnxkxfnpwaydy/sql/new" target="_blank" class="underline font-bold text-blue-700">Supabase SQL Editor</a> and paste it.<br>
+          <strong>Step 3:</strong> Click <strong>Run</strong> in Supabase, then click the test button below!
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+        <button onclick="app.checkSupabaseConnection(true)" id="btn-test-supabase" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm">
+          <span>🔄</span> Test & Sync Supabase Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- D. Member Daily Calendar Inspector Modal -->
+  <div id="modal-member-breakdown" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-md w-full p-5 shadow-2xl modal-sheet-content space-y-4 max-h-[85vh] flex flex-col">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base" id="breakdown-member-name">Member Meals</h3>
+          <p class="text-xs text-slate-500" id="breakdown-month-label">Daily count breakdown</p>
+        </div>
+        <button onclick="app.closeMemberBreakdownModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+      <div class="overflow-y-auto space-y-1 pr-1" id="breakdown-daily-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- E. Manager Authentication Protected Modal for Reset Month -->
+  <div id="modal-manager-auth" class="fixed inset-0 z-50 hidden modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="rounded-t-3xl sm:rounded-2xl max-w-sm w-full p-5 shadow-2xl modal-sheet-content space-y-4">
+      <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
+      <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-base font-bold">
+            🔒
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-sm">Manager Auth Required</h3>
+            <p class="text-[11px] text-slate-400">Supabase Password Protected</p>
+          </div>
+        </div>
+        <button onclick="app.closeResetMonthModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-800 space-y-1">
+        <p class="font-bold flex items-center gap-1">
+          <span>⚠️</span> Sensitive Action: Reset Month
+        </p>
+        <p class="text-[11px] leading-relaxed text-rose-700">
+          Resetting will clear all daily meal orders and cooking status for the month. Enter your <strong>Unfilteredpages Manager credentials</strong> to authorize.
+        </p>
+      </div>
+
+      <form onsubmit="app.handleManagerAuthReset(event)" class="space-y-3">
+        <div id="manager-auth-error" class="hidden p-2.5 rounded-lg bg-red-100 border border-red-300 text-red-800 text-xs font-semibold"></div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">Manager Email</label>
+          <input type="email" id="manager-auth-email" required placeholder="Enter your Unfilteredpages manager email" class="w-full text-xs font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-rose-600 focus:ring-2 focus:ring-rose-500/20 focus:outline-none shadow-xs">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1">Manager Password</label>
+          <input type="password" id="manager-auth-password" required placeholder="Enter your Unfilteredpages password" class="w-full text-xs font-medium border-2 border-slate-300 rounded-xl px-3.5 py-2.5 bg-white text-slate-900 placeholder:text-slate-400 focus:border-rose-600 focus:ring-2 focus:ring-rose-500/20 focus:outline-none shadow-xs">
+        </div>
+
+        <p class="text-[11px] text-slate-500 text-center font-medium">
+          Uses the same Supabase Authentication as your Unfilteredpages manager portal.
+        </p>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="app.closeResetMonthModal()" class="w-1/2 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" id="btn-submit-manager-auth" class="w-1/2 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-1.5 active:scale-95">
+            <span>🛡️</span> Verify & Reset
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-16 right-4 left-4 sm:left-auto sm:w-80 z-50 pointer-events-none space-y-2"></div>
+
+  <!-- ======================================================== -->
+  <!-- 7. APP SCRIPTS                                           -->
+  <!-- ======================================================== -->
+  <script src="js/config.js"></script>
+  <script src="js/supabase-api.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+          console.log('SW registration note:', err);
+        });
+      });
     }
-
-    function closeModal() {
-        // Add closing class (Slide to right)
-        modal.classList.add('closing');
-        
-        // Wait for CSS transition to finish before removing active class
-        setTimeout(() => {
-            modal.classList.remove('active');
-            modal.classList.remove('closing');
-        }, 400); // Matches CSS transition duration
-    }
-
-    // Close modal on clicking outside overlay
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            closeModal();
-        }
-    }
-</script>
-
+  </script>
 </body>
 </html>
