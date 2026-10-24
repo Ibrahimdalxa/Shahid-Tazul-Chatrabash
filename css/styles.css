@@ -328,3 +328,114 @@ textarea::placeholder {
     padding: 6px 10px !important;
   }
 }
+
+/* ── Dark Mode Token Overrides ─────────────────────────────────── */
+html.dark {
+  --bg-main: #0F172A;
+  --card-bg: #1E293B;
+  --text-main: #F1F5F9;
+  --text-muted: #94A3B8;
+  --border: #334155;
+}
+
+html.dark body {
+  background-color: #0F172A;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(49, 46, 129, 0.25) 0px, transparent 45%),
+    radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
+  color: #F1F5F9;
+}
+
+html.dark .glass-card,
+html.dark .glass-surface {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(51, 65, 85, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2);
+}
+
+html.dark .glass-header {
+  background: rgba(15, 23, 42, 0.88);
+  border-bottom-color: rgba(51, 65, 85, 0.7);
+}
+
+html.dark .glass-date-bar {
+  background: rgba(15, 23, 42, 0.82);
+  border-bottom-color: rgba(51, 65, 85, 0.6);
+}
+
+html.dark .glass-bottom-bar {
+  background: rgba(15, 23, 42, 0.9);
+  border-top-color: rgba(51, 65, 85, 0.6);
+  box-shadow: 0 -4px 25px rgba(0,0,0,0.3);
+}
+
+html.dark .glass-pill {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(51, 65, 85, 0.7);
+}
+
+html.dark .modal-sheet-content {
+  background: #1E293B;
+  color: #F1F5F9;
+}
+
+html.dark .modal-backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+html.dark h1, html.dark h2, html.dark h3 {
+  color: #F1F5F9;
+}
+html.dark .text-slate-900 { color: #F1F5F9 !important; }
+html.dark .text-slate-800 { color: #E2E8F0 !important; }
+html.dark .text-slate-700 { color: #CBD5E1 !important; }
+html.dark .text-slate-600 { color: #94A3B8 !important; }
+html.dark .text-slate-500 { color: #64748B !important; }
+
+html.dark input[type="text"],
+html.dark input[type="password"],
+html.dark input[type="email"],
+html.dark input[type="month"],
+html.dark input[type="number"],
+html.dark select,
+html.dark textarea {
+  background-color: #0F172A !important;
+  color: #F1F5F9 !important;
+  border-color: #475569 !important;
+}
+
+html.dark .date-pill {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(71, 85, 105, 0.6);
+  color: #CBD5E1;
+}
+
+html.dark .date-pill.active {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: #FFFFFF;
+}
+
+html.dark .bg-slate-50 { background-color: #0F172A !important; }
+html.dark .bg-white { background-color: #1E293B !important; }
+html.dark .bg-slate-100\/80 { background-color: rgba(30,41,59,0.8) !important; }
+html.dark .border-slate-100 { border-color: #334155 !important; }
+html.dark .border-slate-200\/80 { border-color: rgba(51,65,85,0.8) !important; }
+
+/* Dark Mode Toggle Button */
+.dark-toggle {
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.dark-toggle:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

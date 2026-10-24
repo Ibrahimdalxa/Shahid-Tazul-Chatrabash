@@ -10,6 +10,9 @@ class MessApp {
   }
 
   async init() {
+    // Apply saved dark mode preference before anything renders
+    this.initDarkMode();
+
     // Set date input to today
     const today = window.messStorage.formatDate(new Date());
     const dateInput = document.getElementById('date-picker-input');
@@ -46,6 +49,30 @@ class MessApp {
     // Initial render
     this.render();
   }
+
+  /* ── Dark Mode ──────────────────────────────────────────────── */
+  initDarkMode() {
+    const saved = localStorage.getItem('darkMode');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = saved !== null ? saved === 'true' : prefersDark;
+    document.documentElement.classList.toggle('dark', isDark);
+    this._updateDarkToggleIcon(isDark);
+  }
+
+  toggleDarkMode() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+    this._updateDarkToggleIcon(isDark);
+  }
+
+  _updateDarkToggleIcon(isDark) {
+    const iconDark = document.getElementById('icon-dark');
+    const iconLight = document.getElementById('icon-light');
+    if (iconDark) iconDark.classList.toggle('hidden', !isDark);
+    if (iconLight) iconLight.classList.toggle('hidden', isDark);
+  }
+
+
 
   checkDailySession() {
     if (window.messStorage.state.currentUser && !window.messStorage.isSessionValid()) {
